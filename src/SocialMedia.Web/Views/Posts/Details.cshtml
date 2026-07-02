@@ -1,0 +1,83 @@
+@model SocialMedia.Shared.ViewModels.Posts.PostDetailsViewModel
+@{
+    ViewData["Title"] = "發文詳細頁";
+}
+
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-9">
+        <div class="d-grid d-md-flex justify-content-md-end mb-3">
+            <a class="btn btn-primary btn-lg px-4" asp-action="Index">返回</a>
+        </div>
+
+        <article class="card shadow-sm mb-4">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-start gap-3">
+                    <div>
+                        <h1 class="h3 mb-1">
+                            <a class="text-decoration-none" asp-controller="Profile" asp-action="Index" asp-route-userId="@Model.UserId">@Model.UserName</a>
+                        </h1>
+                        <div class="text-muted small">@Model.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</div>
+                    </div>
+                    <div class="text-muted small">留言數：@Model.CommentCount</div>
+                </div>
+
+                <p class="mt-3 mb-3">@Model.Content</p>
+
+                @if (!string.IsNullOrWhiteSpace(Model.ImagePath))
+                {
+                    <div class="mb-3">
+                        <img src="@Url.Content("~/" + Model.ImagePath)" alt="Post image" class="img-fluid rounded" />
+                    </div>
+                }
+            </div>
+        </article>
+
+        <section class="card shadow-sm mb-4">
+            <div class="card-body p-4">
+                <h2 class="h4 mb-3">留言</h2>
+
+                @if (TempData["SuccessMessage"] is string successMessage)
+                {
+                    <div class="alert alert-success">@successMessage</div>
+                }
+
+                @if (Model.Comments.Count == 0)
+                {
+                    <div class="alert alert-info">目前尚無留言。</div>
+                }
+                else
+                {
+                    <div class="list-group mb-4">
+                        @foreach (var comment in Model.Comments)
+                        {
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-start gap-3">
+                                    <strong>@comment.UserName</strong>
+                                    <span class="text-muted small">@comment.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</span>
+                                </div>
+                                <p class="mb-0 mt-2">@comment.Content</p>
+                            </div>
+                        }
+                    </div>
+                }
+
+                @if (User.Identity?.IsAuthenticated ?? false)
+                {
+                    <form asp-controller="Comments" asp-action="Create" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="PostId" value="@Model.PostId" />
+                        <div class="mb-3">
+                            <label class="form-label" for="Content">新增留言</label>
+                            <textarea class="form-control" id="Content" name="Content" rows="4" maxlength="1000" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">送出留言</button>
+                    </form>
+                }
+                else
+                {
+                    <div class="alert alert-warning mb-0">請先登入才能留言。</div>
+                }
+            </div>
+        </section>
+    </div>
+</div>

@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/SocialMedia.Business/SocialMedia.Business.csproj" />
+    <Project Path="src/SocialMedia.DataAccess/SocialMedia.DataAccess.csproj" />
+    <Project Path="src/SocialMedia.Shared/SocialMedia.Shared.csproj" />
+    <Project Path="src/SocialMedia.Web/SocialMedia.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/SocialMedia.Tests/SocialMedia.Tests.csproj" />
+  </Folder>
+</Solution>
